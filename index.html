@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Consulta Especial — Doctora Aishia 🦷❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose: #f7b8c4;
+    --rose-deep: #e8758a;
+    --rose-dark: #c94d6e;
+    --cream: #fff5f7;
+    --white: #ffffff;
+    --text: #3a1a24;
+    --text-soft: #7a4a58;
+    --xray-bg: #0a1628;
+    --xray-blue: #1a3a6e;
+    --xray-glow: #4a9eff;
+    --gold: #f5c842;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ========== CANVAS PARTICLES ========== */
+  #particles-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ========== SCREEN SYSTEM ========== */
+  .screen {
+    display: none;
+    position: relative;
+    min-height: 100vh;
+    z-index: 1;
+  }
+  .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px 20px; }
+
+  /* ========== MUSIC PLAYER ========== */
+  #music-btn {
+    position: fixed;
+    top: 16px; right: 16px;
+    z-index: 100;
+    background: rgba(255,255,255,0.9);
+    border: 2px solid var(--rose-deep);
+    border-radius: 50px;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    color: var(--rose-dark);
+    display: flex; align-items: center; gap: 6px;
+    box-shadow: 0 4px 15px rgba(232,117,138,0.3);
+    transition: all 0.3s;
+    backdrop-filter: blur(8px);
+  }
+  #music-btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(232,117,138,0.4); }
+  #music-btn .note { font-size: 16px; animation: notePulse 1.5s infinite; }
+  @keyframes notePulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.2)} }
+
+  /* ========== PROGRESS BAR ========== */
+  #progress-wrap {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    background: rgba(255,245,247,0.95);
+    padding: 10px 20px;
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rose);
+  }
+  #progress-wrap.visible { display: block; }
+  .progress-label { font-size: 12px; color: var(--text-soft); margin-bottom: 6px; text-align: center; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+  .progress-bar-bg { background: var(--rose); border-radius: 10px; height: 8px; overflow: hidden; }
+  .progress-bar-fill { background: linear-gradient(90deg, var(--rose-deep), var(--rose-dark)); height: 100%; border-radius: 10px; transition: width 0.6s cubic-bezier(.4,0,.2,1); }
+
+  /* ========== FLOATING HEARTS ========== */
+  .heart-float {
+    position: fixed;
+    pointer-events: none;
+    z-index: 0;
+    animation: floatUp linear forwards;
+    font-size: 20px;
+    opacity: 0.7;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg) scale(1); opacity: 0.7; }
+    100% { transform: translateY(-110vh) rotate(30deg) scale(0.5); opacity: 0; }
+  }
+
+  /* ========== CONFETTI ========== */
+  .confetti-piece {
+    position: fixed;
+    width: 10px; height: 10px;
+    pointer-events: none;
+    z-index: 200;
+    animation: confettiFall linear forwards;
+  }
+  @keyframes confettiFall {
+    0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ========== CARD ========== */
+  .card {
+    background: rgba(255,255,255,0.92);
+    border-radius: 28px;
+    padding: 36px 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(201,77,110,0.15), 0 2px 8px rgba(0,0,0,0.04);
+    backdrop-filter: blur(12px);
+    border: 1.5px solid rgba(247,184,196,0.5);
+  }
+
+  /* ========== TYPOGRAPHY ========== */
+  .title-serif {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 38px);
+    line-height: 1.2;
+    color: var(--rose-dark);
+    text-align: center;
+  }
+  .title-serif em { font-style: italic; }
+  .subtitle { font-size: clamp(13px, 3.5vw, 16px); color: var(--text-soft); text-align: center; margin-top: 8px; line-height: 1.6; }
+  .badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color: white;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  /* ========== BUTTONS ========== */
+  .btn-primary {
+    display: block;
+    width: 100%;
+    background: linear-gradient(135deg, var(--rose-deep), var(--rose-dark));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 32px;
+    font-size: 18px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 24px;
+    min-height: 56px;
+    box-shadow: 0 8px 25px rgba(201,77,110,0.35);
+    transition: all 0.3s cubic-bezier(.4,0,.2,1);
+    letter-spacing: 0.5px;
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(201,77,110,0.45); }
+  .btn-primary:active { transform: translateY(0); }
+
+  .btn-option {
+    display: block;
+    width: 100%;
+    background: rgba(247,184,196,0.2);
+    color: var(--text);
+    border: 2px solid var(--rose);
+    border-radius: 14px;
+    padding: 14px 20px;
+    font-size: 16px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 12px;
+    min-height: 52px;
+    transition: all 0.25s;
+    text-align: left;
+  }
+  .btn-option:hover { background: rgba(232,117,138,0.15); border-color: var(--rose-deep); transform: translateX(4px); }
+  .btn-option.correct { background: rgba(82,196,26,0.1); border-color: #52c41a; color: #2d6a00; animation: correctPop 0.4s; }
+  .btn-option.wrong { background: rgba(255,77,79,0.1); border-color: #ff4d4f; animation: wrongShake 0.4s; }
+  @keyframes correctPop { 0%{transform:scale(1)} 50%{transform:scale(1.04)} 100%{transform:scale(1)} }
+  @keyframes wrongShake { 0%{transform:translateX(0)} 20%{transform:translateX(-6px)} 40%{transform:translateX(6px)} 60%{transform:translateX(-4px)} 80%{transform:translateX(4px)} 100%{transform:translateX(0)} }
+
+  .divider { border: none; border-top: 1.5px solid var(--rose); margin: 20px 0; opacity: 0.5; }
+
+  /* ========== SCREEN 1 — INTRO ========== */
+  #screen-intro { background: linear-gradient(160deg, #ffe0ea 0%, #fff5f7 50%, #ffd6e8 100%); }
+  .intro-emoji { font-size: 56px; margin-bottom: 16px; display: block; animation: heartBeat 1.6s infinite; }
+  @keyframes heartBeat { 0%,100%{transform:scale(1)} 14%{transform:scale(1.15)} 28%{transform:scale(1)} 42%{transform:scale(1.1)} }
+  .warning-box {
+    background: rgba(247,184,196,0.25);
+    border-left: 4px solid var(--rose-deep);
+    border-radius: 0 12px 12px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+    font-size: 14px;
+    color: var(--text-soft);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .patient-info {
+    background: rgba(255,255,255,0.7);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin: 16px 0;
+  }
+  .patient-info p { font-size: 14px; color: var(--text-soft); margin: 4px 0; }
+  .patient-info strong { color: var(--rose-dark); }
+
+  /* ========== SCREEN 2 — XRAY ========== */
+  #screen-xray { background: var(--xray-bg); }
+  #screen-xray .card { background: rgba(10,22,40,0.85); border-color: rgba(74,158,255,0.3); }
+  #screen-xray .title-serif { color: var(--xray-glow); }
+  #screen-xray .subtitle { color: rgba(180,220,255,0.7); }
+  .xray-frame {
+    width: 220px; height: 280px;
+    background: linear-gradient(160deg, #0d1f3c, #061020);
+    border: 2px solid var(--xray-blue);
+    border-radius: 16px;
+    margin: 20px auto;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(74,158,255,0.2), inset 0 0 30px rgba(10,30,80,0.5);
+  }
+  .xray-scanline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--xray-glow), transparent);
+    animation: xrayScan 2.5s ease-in-out infinite;
+    opacity: 0.6;
+  }
+  @keyframes xrayScan { 0%{top:0%} 100%{top:100%} }
+  .xray-teeth {
+    position: absolute;
+    bottom: 24px;
+    display: flex; gap: 4px;
+    opacity: 0.3;
+  }
+  .tooth { width: 14px; height: 22px; background: rgba(180,220,255,0.5); border-radius: 3px 3px 6px 6px; }
+  .xray-heart {
+    width: 90px; height: 90px;
+    position: relative;
+    animation: xrayHeartPulse 1.8s infinite;
+    filter: drop-shadow(0 0 12px var(--xray-glow));
+  }
+  @keyframes xrayHeartPulse { 0%,100%{filter:drop-shadow(0 0 8px #4a9eff)} 50%{filter:drop-shadow(0 0 22px #4a9eff) drop-shadow(0 0 40px rgba(74,158,255,0.4))} }
+  .xray-heart-text {
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    color: white;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s;
+    white-space: nowrap;
+    font-style: italic;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .xray-heart-text.revealed { opacity: 1; }
+  .diagnosis-box {
+    background: rgba(74,158,255,0.08);
+    border: 1px solid rgba(74,158,255,0.25);
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    color: rgba(180,220,255,0.85);
+    line-height: 1.6;
+    text-align: center;
+    display: none;
+  }
+  .diagnosis-box.show { display: block; }
+
+  /* ========== CHALLENGES ========== */
+  #screen-c1, #screen-c2, #screen-c3 { background: linear-gradient(160deg, #fff0f4 0%, #fff8fa 100%); padding-top: 70px; }
+  .challenge-header { text-align: center; margin-bottom: 20px; }
+  .challenge-icon { font-size: 40px; margin-bottom: 8px; display: block; }
+  .symptoms-list { background: rgba(247,184,196,0.15); border-radius: 12px; padding: 14px 16px; margin: 14px 0; }
+  .symptoms-list li { font-size: 14px; color: var(--text-soft); margin: 6px 0; list-style: none; padding-left: 20px; position: relative; line-height: 1.5; }
+  .symptoms-list li::before { content: '•'; color: var(--rose-deep); position: absolute; left: 4px; }
+  .feedback-msg { text-align: center; padding: 16px; font-size: 15px; font-weight: 600; color: var(--rose-dark); display: none; animation: fadeIn 0.5s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .feedback-msg.show { display: block; }
+
+  /* ========== MATCHING GAME ========== */
+  .match-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .match-item {
+    background: rgba(247,184,196,0.2);
+    border: 2px solid var(--rose);
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.25s;
+    min-height: 52px;
+    display: flex; align-items: center; justify-content: center;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .match-item:active { transform: scale(0.97); }
+  .match-item.selected { background: rgba(232,117,138,0.3); border-color: var(--rose-dark); transform: scale(1.03); }
+  .match-item.matched { background: rgba(82,196,26,0.15); border-color: #52c41a; color: #2d6a00; cursor: default; }
+  .match-item.wrong-flash { animation: wrongShake 0.4s; }
+  .match-divider { text-align: center; font-size: 12px; color: var(--text-soft); margin: -4px 0 8px; font-style: italic; }
+
+  /* ========== TRANSITION SCREEN ========== */
+  #screen-transition { background: linear-gradient(160deg, #ffe0ea, #fff5f7); text-align: center; }
+  #screen-transition .card { text-align: center; }
+  .transition-steps p {
+    font-size: 16px;
+    color: var(--text-soft);
+    margin: 12px 0;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.6s;
+    line-height: 1.6;
+  }
+  .transition-steps p.appear { opacity: 1; transform: translateY(0); }
+  .stethoscope { font-size: 50px; display: block; margin: 16px auto; animation: stethBob 2s infinite; }
+  @keyframes stethBob { 0%,100%{transform:rotate(-5deg)} 50%{transform:rotate(5deg)} }
+
+  /* ========== FINAL QUESTION ========== */
+  #screen-final { background: linear-gradient(160deg, #ffd6e8 0%, #fff0f5 50%, #ffe0ea 100%); }
+  #screen-final .card { text-align: center; }
+  .final-big { font-family: 'Playfair Display', serif; font-size: clamp(32px, 9vw, 52px); color: var(--rose-dark); line-height: 1.1; margin: 8px 0; }
+  .final-question { font-family: 'Playfair Display', serif; font-size: clamp(20px, 5.5vw, 28px); color: var(--text); line-height: 1.3; margin: 16px 0; font-style: italic; }
+  .final-note { font-size: 13px; color: var(--text-soft); margin: 6px 0; line-height: 1.6; font-style: italic; }
+  .final-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    position: relative;
+    min-height: 80px;
+    align-items: center;
+  }
+  #btn-si {
+    flex: 1;
+    background: linear-gradient(135deg, #e8758a, var(--rose-dark));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 18px 24px;
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    min-height: 64px;
+    box-shadow: 0 8px 30px rgba(201,77,110,0.4);
+    transition: all 0.3s;
+    animation: siPulse 2s infinite;
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes siPulse { 0%,100%{box-shadow:0 8px 30px rgba(201,77,110,0.4)} 50%{box-shadow:0 8px 45px rgba(201,77,110,0.65)} }
+  #btn-si:hover { transform: scale(1.05); }
+  #btn-no {
+    flex: 1;
+    background: white;
+    color: var(--text-soft);
+    border: 2px solid var(--rose);
+    border-radius: 50px;
+    padding: 18px 16px;
+    font-size: 15px;
+    font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 64px;
+    transition: all 0.2s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* ========== SUCCESS SCREEN ========== */
+  #screen-success { background: linear-gradient(160deg, #ffd6e8 0%, #fff5f7 50%, #ffe8f0 100%); }
+  #screen-success .card { text-align: center; }
+  .pa-heart { font-size: 60px; display: block; margin: 0 auto 16px; animation: paFloat 3s ease-in-out infinite; }
+  @keyframes paFloat { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-12px) rotate(3deg)} }
+  .success-letters { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px 0; }
+  .letter-p, .letter-a {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    color: var(--rose-dark);
+    font-weight: 700;
+    line-height: 1;
+    animation: letterPop 0.5s cubic-bezier(.4,0,.2,1) backwards;
+  }
+  .letter-a { animation-delay: 0.3s; }
+  @keyframes letterPop { from{transform:scale(0) rotate(-20deg);opacity:0} to{transform:scale(1) rotate(0);opacity:1} }
+  .heart-between { font-size: 48px; animation: heartBeat 1.4s infinite; }
+  .success-title { font-family: 'Playfair Display', serif; font-size: 28px; color: var(--rose-dark); margin: 8px 0; }
+  .success-sub { font-size: 15px; color: var(--text-soft); line-height: 1.7; margin: 8px 0; font-style: italic; }
+  .rels-quote { background: rgba(247,184,196,0.2); border-radius: 12px; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--text-soft); font-style: italic; line-height: 1.6; border-left: 3px solid var(--rose-deep); }
+
+  /* ========== SHIMMER ========== */
+  @keyframes shimmer { 0%,100%{opacity:0.4} 50%{opacity:1} }
+
+  /* ========== RESPONSIVE ========== */
+  @media(max-width:360px) { .card { padding: 24px 18px; } .final-big { font-size: 28px; } }
+  @media(min-width:600px) { .card { padding: 44px 40px; } }
+</style>
+</head>
+<body>
+
+<canvas id="particles-canvas"></canvas>
+
+<button id="music-btn" onclick="toggleMusic()">
+  <span class="note">🎵</span>
+  <span id="music-label">Música</span>
+</button>
+
+<div id="progress-wrap">
+  <div class="progress-label" id="progress-label">Revisión 1 de 3</div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progress-fill" style="width:0%"></div></div>
+</div>
+
+<!-- ===== SCREEN INTRO ===== -->
+<div id="screen-intro" class="screen active">
+  <div class="card">
+    <span class="intro-emoji">🦷</span>
+    <div class="badge">Consulta privada</div>
+    <h1 class="title-serif">Consulta especial con la <em>doctora Aishia</em></h1>
+    <div class="patient-info">
+      <p>👤 <strong>Paciente:</strong> Pablo</p>
+      <p>📋 <strong>Motivo:</strong> Algo más que una limpieza dental...</p>
+    </div>
+    <div class="warning-box">
+      ⚠️ <strong>Advertencia médica:</strong> este paciente sufre de una fuerte adicción a los besos de su doctora.
+      <br><br>
+      Antes de seguir con la revisión, necesitamos realizar algunos chequeos rápidos.
+    </div>
+    <button class="btn-primary" onclick="startConsult()">Iniciar consulta 🦷❤️</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN XRAY ===== -->
+<div id="screen-xray" class="screen">
+  <div class="card">
+    <div class="badge" style="background:linear-gradient(135deg,#1a3a6e,#0a2048);color:#4a9eff;">Análisis radiológico</div>
+    <h2 class="title-serif">Radiografía del paciente Pablo...</h2>
+    <div class="xray-frame">
+      <div class="xray-scanline"></div>
+      <div class="xray-teeth">
+        <div class="tooth"></div><div class="tooth"></div><div class="tooth"></div>
+        <div class="tooth"></div><div class="tooth"></div><div class="tooth"></div>
+      </div>
+      <div style="position:relative;z-index:2;">
+        <svg class="xray-heart" viewBox="0 0 100 100">
+          <defs>
+            <radialGradient id="hg" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#7ab8ff" stop-opacity="0.9"/>
+              <stop offset="100%" stop-color="#1a3a6e" stop-opacity="0.7"/>
+            </radialGradient>
+          </defs>
+          <path d="M50 80 C20 60, 5 45, 5 30 C5 15, 15 8, 27 8 C36 8, 44 13, 50 20 C56 13, 64 8, 73 8 C85 8, 95 15, 95 30 C95 45, 80 60, 50 80Z" fill="url(#hg)" stroke="#4a9eff" stroke-width="2"/>
+        </svg>
+        <div class="xray-heart-text" id="xray-text"> Aishia❤️</div>
+      </div>
+    </div>
+    <div class="diagnosis-box" id="diag-box">
+      🔬 <strong style="color:#4a9eff;">Diagnóstico preliminar:</strong><br>
+      El paciente presenta un caso avanzado de enamoramiento.
+    </div>
+    <button class="btn-primary" id="xray-btn" onclick="xrayReveal()" style="background:linear-gradient(135deg,#1a3a6e,#0a2048);color:#4a9eff;box-shadow:0 8px 25px rgba(74,158,255,0.3);">
+      Analizar radiografía
+    </button>
+  </div>
+</div>
+
+<!-- ===== SCREEN CHALLENGE 1 ===== -->
+<div id="screen-c1" class="screen">
+  <div class="card">
+    <div class="challenge-header">
+      <span class="challenge-icon">🩺</span>
+      <div class="badge">Revisión 1 de 3</div>
+      <h2 class="title-serif" style="font-size:22px;">Diagnóstico del paciente</h2>
+    </div>
+    <div class="subtitle" style="text-align:left;margin-bottom:8px;">El paciente Pablo presenta los siguientes síntomas:</div>
+    <ul class="symptoms-list">
+      <li>Sonríe demasiado cuando ve a la doctora</li>
+      <li>Dice <em>"flaquita"</em> constantemente</li>
+      <li>Tiene una debilidad fatal por los besos de la doctora</li>
+    </ul>
+    <p style="font-weight:700;color:var(--text);font-size:16px;margin:16px 0 8px;">¿Cuál es el diagnóstico?</p>
+    <button class="btn-option" onclick="c1Answer(this, false)">🦷 Caries</button>
+    <button class="btn-option" onclick="c1Answer(this, true)">❤️ Amor</button>
+    <button class="btn-option" onclick="c1Answer(this, false)">😬 Gingivitis</button>
+    <div class="feedback-msg" id="c1-feedback"></div>
+    <button class="btn-primary" id="c1-next" onclick="goToC2()" style="display:none;">Continuar al siguiente examen →</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN CHALLENGE 2 ===== -->
+<div id="screen-c2" class="screen">
+  <div class="card">
+    <div class="challenge-header">
+      <span class="challenge-icon">🔗</span>
+      <div class="badge">Revisión 2 de 3</div>
+      <h2 class="title-serif" style="font-size:22px;">Relacionar conceptos</h2>
+    </div>
+    <div class="subtitle" style="text-align:left;">Une cada elemento con su pareja correcta tocando primero uno del lado izquierdo y luego uno del lado derecho:</div>
+    <div style="display:grid;grid-template-columns:1fr 16px 1fr;gap:8px;margin:16px 0;align-items:start;">
+      <div>
+        <div class="match-item" id="ml-1" data-col="left" data-id="1" onclick="matchSelect(this)">🩺 Pablo</div>
+        <div class="match-item" id="ml-2" data-col="left" data-id="2" onclick="matchSelect(this)" style="margin-top:10px;">💋 Beso</div>
+        <div class="match-item" id="ml-3" data-col="left" data-id="3" onclick="matchSelect(this)" style="margin-top:10px;">🪥 Cepillo de dientes</div>
+        <div class="match-item" id="ml-4" data-col="left" data-id="4" onclick="matchSelect(this)" style="margin-top:10px;">📋 Motivo de consulta</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding-top:6px;">
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--rose);"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--rose);margin-top:24px;"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--rose);margin-top:24px;"></div>
+        <div style="width:12px;height:12px;border-radius:50%;background:var(--rose);margin-top:24px;"></div>
+      </div>
+      <div>
+        <div class="match-item" id="mr-4" data-col="right" data-id="4" onclick="matchSelect(this)">❤️ Amor</div>
+        <div class="match-item" id="mr-1" data-col="right" data-id="1" onclick="matchSelect(this)" style="margin-top:10px;">👩‍⚕️ Aishia</div>
+        <div class="match-item" id="mr-2" data-col="right" data-id="2" onclick="matchSelect(this)" style="margin-top:10px;">💊 Tratamiento favorito</div>
+        <div class="match-item" id="mr-3" data-col="right" data-id="3" onclick="matchSelect(this)" style="margin-top:10px;">✨ Higiene</div>
+      </div>
+    </div>
+    <div class="feedback-msg" id="c2-feedback"></div>
+    <button class="btn-primary" id="c2-next" onclick="goToC3()" style="display:none;">Continuar al siguiente examen →</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN CHALLENGE 3 ===== -->
+<div id="screen-c3" class="screen">
+  <div class="card">
+    <div class="challenge-header">
+      <span class="challenge-icon">📋</span>
+      <div class="badge">Revisión 3 de 3</div>
+      <h2 class="title-serif" style="font-size:22px;">Historia del paciente</h2>
+    </div>
+    <div class="subtitle" style="text-align:left;margin-bottom:12px;">Según el expediente del paciente Pablo...</div>
+    <p style="font-weight:700;color:var(--text);font-size:16px;line-height:1.5;margin-bottom:12px;">¿Cuándo comenzó este extraño caso de enamoramiento?</p>
+    <button class="btn-option" onclick="c3Answer(this, true)">📅 01 de enero del 2026</button>
+    <button class="btn-option" onclick="c3Answer(this, false)">💝 14 de febrero</button>
+    <button class="btn-option" onclick="c3Answer(this, false)">🎄 25 de diciembre</button>
+    <div class="feedback-msg" id="c3-feedback"></div>
+    <button class="btn-primary" id="c3-next" onclick="goToTransition()" style="display:none;">Ver diagnóstico final →</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN TRANSITION ===== -->
+<div id="screen-transition" class="screen">
+  <div class="card">
+    <span class="stethoscope">🔬</span>
+    <div class="badge">Análisis completo</div>
+    <div class="transition-steps" id="transition-steps">
+      <p>Después de varios análisis...</p>
+      <p>La doctora finalmente descubrió el verdadero problema del paciente.</p>
+      <p>Este paciente ya no necesita una limpieza dental...</p>
+      <p style="color:var(--rose-dark);font-weight:700;font-family:'Playfair Display',serif;font-size:18px;font-style:italic;">Parece que necesita algo mucho más importante. 💕</p>
+    </div>
+    <button class="btn-primary" id="transition-btn" onclick="goToFinal()" style="display:none;margin-top:24px;">Revelar diagnóstico final ❤️</button>
+  </div>
+</div>
+
+<!-- ===== SCREEN FINAL ===== -->
+<div id="screen-final" class="screen">
+  <div class="card">
+    <p class="final-big">Doctora Aishia...</p>
+    <div style="font-size:48px;text-align:center;margin:12px 0;animation:heartBeat 1.4s infinite;">💕</div>
+    <p class="final-question">¿Aceptaría oficialmente a este paciente como su novio?</p>
+    <hr class="divider">
+    <p class="final-note">Prometo no faltar nunca a mis limpiezas dentales.</p>
+    <p class="final-note">Y seguir necesitando tus besos como parte del tratamiento, <em>flaquita</em>.</p>
+    <div class="final-buttons">
+      <button id="btn-si" onclick="handleSi()">SÍ ❤️</button>
+      <button id="btn-no" onclick="handleNo(this)">NO 🙃</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN SUCCESS ===== -->
+<div id="screen-success" class="screen">
+  <div class="card">
+    <div class="badge">Tratamiento exitoso ❤️</div>
+    <div class="success-letters">
+      <span class="letter-p">P</span>
+      <span class="heart-between">💕</span>
+      <span class="letter-a">A</span>
+    </div>
+    <h2 class="success-title">Pablo & Aishia</h2>
+    <div class="rels-quote">
+      <em>"Contigo el tiempo pasa diferente, como si el mundo se detuviera solo para nosotros..."</em>
+    </div>
+    <p class="success-sub">Prometo asistir a todas mis limpiezas dentales.</p>
+    <p class="success-sub">Y seguir necesitando los besos de mi <em>flaquita</em> como parte del tratamiento.</p>
+    <p class="success-sub" style="margin-top:12px;color:var(--rose-dark);font-weight:700;">Mencantas ❤️</p>
+    <div class="rels-quote" style="margin-top:16px;">
+      🦷 <strong>Diagnóstico final del paciente Pablo:</strong><br>
+      Completamente enamorado de su doctora. Sin cura conocida. Sin intención de curar.
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== AUDIO =====
+let audioCtx = null;
+let musicPlaying = false;
+let oscillators = [];
+
+
+const audio = new Audio();
+audio.loop = true;
+
+function toggleMusic() {
+  if (!musicPlaying) {
+    audio.src = './rels.mp3';
+    audio.play();
+    musicPlaying = true;
+    document.getElementById('music-label').textContent = 'Pausar';
+    document.querySelector('#music-btn .note').textContent = '🎶';
+  } else {
+    audio.pause();
+    musicPlaying = false;
+    document.getElementById('music-label').textContent = 'Música';
+    document.querySelector('#music-btn .note').textContent = '🎵';
+  }
+}
+
+// ===== PARTICLES =====
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+for (let i = 0; i < 18; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    size: Math.random() * 8 + 4,
+    speedY: -(Math.random() * 0.5 + 0.3),
+    speedX: (Math.random() - 0.5) * 0.3,
+    opacity: Math.random() * 0.4 + 0.1,
+    emoji: Math.random() > 0.5 ? '❤️' : '💕'
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.globalAlpha = p.opacity;
+    ctx.font = `${p.size * 2}px serif`;
+    ctx.fillText(p.emoji, p.x, p.y);
+    p.y += p.speedY;
+    p.x += p.speedX;
+    if (p.y < -30) { p.y = canvas.height + 30; p.x = Math.random() * canvas.width; }
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ===== FLOATING HEARTS =====
+function spawnHeart() {
+  const h = document.createElement('div');
+  h.className = 'heart-float';
+  h.textContent = ['❤️','💕','💗','💓','💖'][Math.floor(Math.random()*5)];
+  h.style.left = Math.random() * 90 + 'vw';
+  h.style.bottom = '-30px';
+  h.style.fontSize = (16 + Math.random() * 20) + 'px';
+  h.style.animationDuration = (4 + Math.random() * 4) + 's';
+  document.body.appendChild(h);
+  setTimeout(() => h.remove(), 8000);
+}
+setInterval(spawnHeart, 1200);
+
+// ===== CONFETTI =====
+function launchConfetti() {
+  const colors = ['#f7b8c4','#e8758a','#c94d6e','#ffd6e8','#ff9eb5','#fff5f7','#f5c842'];
+  for (let i = 0; i < 60; i++) {
+    setTimeout(() => {
+      const c = document.createElement('div');
+      c.className = 'confetti-piece';
+      c.style.left = Math.random() * 100 + 'vw';
+      c.style.background = colors[Math.floor(Math.random() * colors.length)];
+      c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+      c.style.width = (6 + Math.random() * 8) + 'px';
+      c.style.height = (6 + Math.random() * 8) + 'px';
+      c.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+      c.style.top = '-20px';
+      document.body.appendChild(c);
+      setTimeout(() => c.remove(), 5000);
+    }, i * 60);
+  }
+}
+
+// ===== SCREEN NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function updateProgress(step) {
+  const wrap = document.getElementById('progress-wrap');
+  const fill = document.getElementById('progress-fill');
+  const label = document.getElementById('progress-label');
+  if (step === 0) { wrap.classList.remove('visible'); return; }
+  wrap.classList.add('visible');
+  const pct = (step / 3) * 100;
+  fill.style.width = pct + '%';
+  label.textContent = step < 3 ? `Revisión ${step} de 3 🦷❤️` : 'Tratamiento en progreso 🦷❤️';
+}
+
+// ===== INTRO =====
+function startConsult() {
+  toggleMusic();
+  showScreen('screen-xray');
+}
+
+// ===== XRAY =====
+let xrayDone = false;
+function xrayReveal() {
+  if (xrayDone) return;
+  xrayDone = true;
+  const btn = document.getElementById('xray-btn');
+  btn.textContent = 'Analizando...';
+  btn.disabled = true;
+  setTimeout(() => {
+    document.getElementById('xray-text').classList.add('revealed');
+  }, 1500);
+  setTimeout(() => {
+    document.getElementById('diag-box').classList.add('show');
+    btn.textContent = 'Comenzar exámenes →';
+    btn.disabled = false;
+    btn.onclick = () => { updateProgress(1); showScreen('screen-c1'); };
+  }, 3200);
+}
+
+// ===== CHALLENGE 1 =====
+function c1Answer(btn, correct) {
+  const options = document.querySelectorAll('#screen-c1 .btn-option');
+  options.forEach(o => { o.disabled = true; });
+  const fb = document.getElementById('c1-feedback');
+  if (correct) {
+    btn.classList.add('correct');
+    fb.textContent = 'Diagnóstico correcto doctora ❤️ Pablo está completamente enamorado.';
+    fb.style.color = '#2d6a00';
+    fb.classList.add('show');
+    spawnHeartBurst();
+    setTimeout(() => {
+      document.getElementById('c1-next').style.display = 'block';
+      updateProgress(1);
+    }, 800);
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = 'Hmm, revisa los síntomas de nuevo doctora 😅';
+    fb.style.color = 'var(--rose-dark)';
+    fb.classList.add('show');
+    setTimeout(() => {
+      options.forEach(o => { o.disabled = false; o.classList.remove('wrong'); });
+      fb.classList.remove('show');
+    }, 1000);
+  }
+}
+
+function spawnHeartBurst() {
+  for (let i = 0; i < 6; i++) {
+    setTimeout(() => { spawnHeart(); }, i * 150);
+  }
+}
+
+function goToC2() { updateProgress(2); showScreen('screen-c2'); }
+
+// ===== CHALLENGE 2 — MATCHING =====
+let matchLeft = null;
+let matchedPairs = 0;
+
+function matchSelect(el) {
+  if (el.classList.contains('matched')) return;
+  const col = el.dataset.col;
+  const id = el.dataset.id;
+
+  if (col === 'left') {
+    document.querySelectorAll('[data-col="left"]').forEach(e => e.classList.remove('selected'));
+    el.classList.add('selected');
+    matchLeft = id;
+  } else {
+    if (!matchLeft) return;
+    if (matchLeft === id) {
+      // Correct match
+      document.getElementById('ml-' + id).classList.add('matched');
+      document.getElementById('mr-' + id).classList.add('matched');
+      document.getElementById('ml-' + id).classList.remove('selected');
+      matchLeft = null;
+      matchedPairs++;
+      spawnHeart();
+      if (matchedPairs === 4) {
+        const fb = document.getElementById('c2-feedback');
+        fb.textContent = '🎉 Excelente doctora, el tratamiento está funcionando.';
+        fb.style.color = 'var(--rose-dark)';
+        fb.classList.add('show');
+        spawnHeartBurst();
+        setTimeout(() => { document.getElementById('c2-next').style.display = 'block'; }, 600);
+      }
+    } else {
+      // Wrong
+      el.classList.add('wrong-flash');
+      document.querySelector('[data-col="left"].selected')?.classList.add('wrong-flash');
+      setTimeout(() => {
+        document.querySelectorAll('.wrong-flash').forEach(e => e.classList.remove('wrong-flash', 'selected'));
+        matchLeft = null;
+      }, 500);
+    }
+  }
+}
+
+function goToC3() { updateProgress(3); showScreen('screen-c3'); }
+
+// ===== CHALLENGE 3 =====
+function c3Answer(btn, correct) {
+  const options = document.querySelectorAll('#screen-c3 .btn-option');
+  options.forEach(o => o.disabled = true);
+  const fb = document.getElementById('c3-feedback');
+  if (correct) {
+    btn.classList.add('correct');
+    fb.innerHTML = 'La doctora conoce perfectamente el historial del paciente.<br>01 de enero del 2026 — el día que todo cambió. 💕';
+    fb.style.color = '#2d6a00';
+    fb.classList.add('show');
+    spawnHeartBurst();
+    setTimeout(() => { document.getElementById('c3-next').style.display = 'block'; updateProgress(3); }, 800);
+  } else {
+    btn.classList.add('wrong');
+    fb.textContent = 'Revise el expediente con más cuidado, doctora 😊';
+    fb.style.color = 'var(--rose-dark)';
+    fb.classList.add('show');
+    setTimeout(() => {
+      options.forEach(o => { o.disabled = false; o.classList.remove('wrong'); });
+      fb.classList.remove('show');
+    }, 1000);
+  }
+}
+
+// ===== TRANSITION =====
+function goToTransition() {
+  updateProgress(0);
+  showScreen('screen-transition');
+  const steps = document.querySelectorAll('#transition-steps p');
+  steps.forEach((p, i) => {
+    setTimeout(() => p.classList.add('appear'), 600 + i * 900);
+  });
+  setTimeout(() => {
+    document.getElementById('transition-btn').style.display = 'block';
+  }, 600 + steps.length * 900 + 400);
+}
+
+function goToFinal() { showScreen('screen-final'); }
+
+// ===== NO BUTTON BEHAVIOR =====
+let noClicks = 0;
+const noPhrases = ['Eso no estaba en el diagnóstico 😅','Respuesta incorrecta doctora 🩺','Reintentando tratamiento... 💊','El paciente no acepta esa respuesta 🙅','¿Estás segura, doctora? 🤔','Creo que querías presionar SÍ ❤️','El expediente dice SÍ... 📋','Última oportunidad 😏'];
+
+function handleNo(btn) {
+  noClicks++;
+  if (noClicks >= 7) {
+    btn.style.transition = 'all 0.5s';
+    btn.style.transform = 'scale(0)';
+    btn.style.opacity = '0';
+    setTimeout(() => { btn.style.display = 'none'; }, 500);
+    return;
+  }
+
+  const phrase = noPhrases[Math.min(noClicks - 1, noPhrases.length - 1)];
+  btn.textContent = phrase;
+
+  // Shrink progressively
+  const scale = Math.max(0.45, 1 - noClicks * 0.09);
+  const fontSize = Math.max(10, 15 - noClicks * 1.2);
+
+  // Color shifts from white → yellow → orange → red as clicks increase
+  const colors = ['white','#fffbe6','#fff1b8','#ffe7a0','#ffd591','#ffa940','#ff7a45'];
+  const textColors = ['var(--text-soft)','#ad6800','#ad4e00','#ad2102','#820014','#5c0011','#3b0006'];
+  const bg = colors[Math.min(noClicks, colors.length - 1)];
+  const tc = textColors[Math.min(noClicks, textColors.length - 1)];
+
+  btn.style.transition = 'transform 0.15s, background 0.4s, color 0.4s, font-size 0.3s';
+  btn.style.transform = `scale(${scale})`;
+  btn.style.fontSize = fontSize + 'px';
+  btn.style.background = bg;
+  btn.style.color = tc;
+  btn.style.borderColor = colors[Math.min(noClicks + 1, colors.length - 1)];
+
+  // Shake animation
+  btn.animate([
+    { transform: `scale(${scale}) rotate(0deg)` },
+    { transform: `scale(${scale}) rotate(-6deg)` },
+    { transform: `scale(${scale}) rotate(6deg)` },
+    { transform: `scale(${scale}) rotate(-4deg)` },
+    { transform: `scale(${scale}) rotate(4deg)` },
+    { transform: `scale(${scale}) rotate(0deg)` }
+  ], { duration: 400, easing: 'ease-in-out' });
+}
+
+function handleSi() {
+  launchConfetti();
+  spawnHeartBurst();
+  setTimeout(() => spawnHeartBurst(), 400);
+  setTimeout(() => spawnHeartBurst(), 800);
+  setTimeout(() => { showScreen('screen-success'); }, 600);
+}
+
+</script>
+</body>
+</html>

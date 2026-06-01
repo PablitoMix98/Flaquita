@@ -1,23 +1,150 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Gone Girl - Expediente de Ale</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>Gone Girl - Expediente de Aisha</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
-:root{--slate:#4a6278;--slate-light:#6a8299;--mist:#8fa8bc;--cream:#eef3f0;--warm-white:#f5f0e8;--red-accent:#7a3030;--text-dark:#2a3640;--text-mid:#4a6278;--text-light:#8fa8bc;--serif:'Playfair Display',Georgia,serif;--mono:'Courier Prime','Courier New',monospace;}
+:root{
+  --slate:#4a6278;--slate-light:#6a8299;--mist:#8fa8bc;
+  --cream:#eef3f0;--warm-white:#f5f0e8;--red-accent:#7a3030;
+  --text-dark:#2a3640;--text-mid:#4a6278;--text-light:#8fa8bc;
+  --serif:'Playfair Display',Georgia,serif;
+  --mono:'Courier Prime','Courier New',monospace;
+}
 html,body{height:100%;width:100%;}
 body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow-x:hidden;}
 .screen{display:none;min-height:100vh;flex-direction:column;align-items:center;}
 .screen.active{display:flex;animation:fadeUp 0.7s ease;}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.btn-film{background:rgba(74,98,120,0.15);border:1px solid var(--slate-light);color:var(--slate);font-family:var(--mono);font-size:0.72rem;letter-spacing:0.3em;padding:0.9rem 2rem;cursor:pointer;transition:all 0.3s;width:90%;max-width:320px;margin-top:1rem;text-transform:uppercase;display:block;}
+
+/* ── INTRO: imagen de fondo (Mobile First) ── */
+#s-intro {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  justify-content: flex-end;
+  background-color: #48545a; /* Color del cielo para fundirse con la imagen en móvil */
+}
+
+#s-intro .bg-img {
+  position: absolute; inset: 0;
+  /* En móvil: Ajustamos la imagen al ancho exacto y la subimos ligeramente */
+  background: url('./assets/gonegirl.jpg') center 30% / 100% auto no-repeat;
+  z-index: 0;
+}
+
+/* vignette oscuro sobre la imagen ajustado para fundir los bordes en móvil */
+#s-intro .bg-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(72, 84, 90, 1) 0%,      /* Oculta el borde superior de la foto */
+    rgba(72, 84, 90, 0) 15%,     /* Se vuelve transparente para mostrar la foto */
+    rgba(10, 18, 24, 0.1) 40%,
+    rgba(10, 18, 24, 0.85) 75%,
+    rgba(10, 18, 24, 0.95) 100%  /* Oscuro abajo para que la letra blanca se lea bien */
+  );
+}
+
+/* En pantallas de computadora o tablets horizontales: vuelve a expandir la foto */
+@media (min-width: 600px) {
+  #s-intro .bg-img {
+    background: url('./assets/gonegirl.jpg') center center / cover no-repeat;
+  }
+  #s-intro .bg-img::after {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 18, 24, 0.2) 0%,
+      rgba(10, 18, 24, 0.5) 40%,
+      rgba(10, 18, 24, 0.85) 75%,
+      rgba(10, 18, 24, 0.95) 100%
+    );
+  }
+}
+#s-intro .grain{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23noise)' opacity='0.06'/%3E%3C/svg%3E");
+  opacity:0.45;mix-blend-mode:overlay;
+}
+#s-intro .scanlines{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:repeating-linear-gradient(
+    0deg,
+    transparent,transparent 2px,
+    rgba(0,0,0,0.04) 2px,rgba(0,0,0,0.04) 4px
+  );
+}
+#intro-content{
+  position:relative;z-index:2;
+  width:100%;max-width:480px;
+  padding:0 1.5rem 3.5rem;
+  text-align:center;margin:0 auto;
+}
+@keyframes flickerIn{
+  0%{opacity:0}10%{opacity:0.8}12%{opacity:0.2}14%{opacity:0.9}
+  16%{opacity:0.4}18%{opacity:1}100%{opacity:1}
+}
+.intro-meta{
+  font-family:var(--mono);font-size:0.58rem;letter-spacing:0.5em;
+  color:rgba(255,255,255,0.55);margin-bottom:1.4rem;
+  animation:flickerIn 1.8s ease forwards;
+}
+.intro-tagline{
+  font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;
+  color:rgba(255,255,255,0.5);font-style:italic;
+  line-height:1.9;margin:0.6rem 0 0.5rem;
+  animation:fadeUp 1s 0.5s both;
+}
+.intro-quote{
+  font-family:var(--mono);font-size:0.55rem;letter-spacing:0.18em;
+  color:rgba(143,168,188,0.7);font-style:italic;
+  animation:fadeUp 1s 0.8s both;
+}
+.intro-divider{
+  width:50px;height:1px;
+  background:rgba(143,168,188,0.4);
+  margin:1rem auto;animation:fadeUp 1s 0.6s both;
+}
+
+.btn-film{
+  background:rgba(74,98,120,0.15);
+  border:1px solid var(--slate-light);
+  color:var(--slate);font-family:var(--mono);
+  font-size:0.72rem;letter-spacing:0.3em;
+  padding:0.9rem 2rem;cursor:pointer;
+  transition:all 0.3s;width:90%;max-width:320px;
+  margin-top:1rem;text-transform:uppercase;display:block;
+}
 .btn-film:hover{background:rgba(74,98,120,0.28);}
 .btn-film:active{transform:scale(0.98);}
-.path-node{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--slate-light);background:rgba(255,255,255,0.35);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;position:relative;flex-shrink:0;}
+.btn-film-light{
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.35);
+  color:rgba(255,255,255,0.85);
+  font-family:var(--mono);font-size:0.72rem;
+  letter-spacing:0.3em;padding:0.9rem 2rem;
+  cursor:pointer;transition:all 0.3s;
+  width:90%;max-width:320px;margin:1.4rem auto 0;
+  text-transform:uppercase;display:block;
+}
+.btn-film-light:hover{background:rgba(255,255,255,0.16);border-color:rgba(255,255,255,0.6);}
+.btn-film-light:active{transform:scale(0.98);}
+
+/* ── MAPA ── */
+.path-node{
+  width:40px;height:40px;border-radius:50%;
+  border:1.5px solid var(--slate-light);
+  background:rgba(255,255,255,0.35);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.3s;position:relative;flex-shrink:0;
+}
 .path-node.done{background:var(--slate);border-color:var(--slate);}
 .path-node.done .node-num{color:var(--warm-white);}
 .path-node.current{background:rgba(74,98,120,0.3);border-color:var(--slate);border-width:2px;animation:nPulse 2s infinite;}
@@ -26,13 +153,47 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
 .node-num{font-family:var(--mono);font-size:0.68rem;color:var(--slate);font-weight:700;}
 .path-dash{width:20px;height:1px;background:var(--slate-light);opacity:0.5;flex-shrink:0;}
 .path-dash.done-line{opacity:0.9;background:var(--slate);}
-.node-label{font-family:var(--mono);font-size:0.45rem;color:var(--text-mid);text-align:center;position:absolute;top:44px;left:50%;transform:translateX(-50%);white-space:nowrap;letter-spacing:0.1em;}
-.ale-fig{text-align:center;margin:1.4rem 0 0.6rem;}
-.ale-name{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.25em;color:var(--slate);margin-top:0.3rem;}
-.q-card{background:rgba(238,243,240,0.92);border:1px solid rgba(74,98,120,0.25);margin:0 1rem;padding:1.3rem;border-radius:2px;}
+.node-label{
+  font-family:var(--mono);font-size:0.45rem;color:var(--text-mid);
+  text-align:center;position:absolute;top:44px;left:50%;
+  transform:translateX(-50%);white-space:nowrap;letter-spacing:0.1em;
+}
+
+.detective-wrap{text-align:center;margin:1.2rem 0 0.4rem;position:relative;}
+#detective-lottie{width:100px;height:100px;margin:0 auto;display:block;filter:drop-shadow(0 4px 12px rgba(74,98,120,0.35));transition:transform 0.9s cubic-bezier(0.34,1.56,0.64,1);}
+.ale-name{font-family:var(--mono);font-size:0.6rem;letter-spacing:0.25em;color:var(--slate);margin-top:0.2rem;}
+
+/* Puntos Dinámicos */
+.score-badge {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  background: var(--slate);
+  color: var(--warm-white);
+  padding: 0.3rem 0.6rem;
+  border-radius: 4px;
+  display: inline-block;
+  margin-top: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+/* Pregunta */
+.q-card{
+  background:rgba(238,243,240,0.92);
+  border:1px solid rgba(74,98,120,0.25);
+  margin:0 1rem;padding:1.3rem;border-radius:2px;
+}
 .q-eyebrow{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.4em;color:var(--slate-light);margin-bottom:0.5rem;text-transform:uppercase;}
 .q-text{font-size:clamp(0.88rem,3.5vw,1.05rem);line-height:1.65;color:var(--text-dark);margin-bottom:1.2rem;}
-.opt-btn{display:block;width:100%;background:rgba(74,98,120,0.06);border:1px solid rgba(74,98,120,0.2);color:var(--text-dark);font-family:var(--serif);font-size:0.9rem;line-height:1.5;padding:0.78rem 0.9rem;margin-bottom:0.5rem;cursor:pointer;text-align:left;transition:all 0.22s;border-radius:2px;}
+.opt-btn{
+  display:block;width:100%;
+  background:rgba(74,98,120,0.06);
+  border:1px solid rgba(74,98,120,0.2);
+  color:var(--text-dark);font-family:var(--serif);
+  font-size:0.9rem;line-height:1.5;
+  padding:0.78rem 0.9rem;margin-bottom:0.5rem;
+  cursor:pointer;text-align:left;
+  transition:all 0.22s;border-radius:2px;
+}
 .opt-ltr{font-family:var(--mono);font-size:0.58rem;color:var(--text-light);display:block;margin-bottom:0.15rem;}
 .opt-btn:hover{background:rgba(74,98,120,0.15);border-color:var(--slate-light);}
 .opt-btn.correct{background:rgba(74,98,120,0.22);border-color:var(--slate);}
@@ -41,47 +202,68 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
 .opt-btn:disabled{cursor:default;}
 .fb-msg{font-family:var(--mono);font-size:0.68rem;letter-spacing:0.12em;text-align:center;min-height:1.1rem;margin:0.5rem 0;}
 .fb-ok{color:var(--slate)}.fb-err{color:var(--red-accent);font-style:italic;}
-.amy-whisper{font-style:italic;font-size:0.83rem;color:var(--red-accent);border-left:2px solid var(--red-accent);padding:0.5rem 0.8rem;margin:0.6rem 0;display:none;background:rgba(122,48,48,0.06);}
+.amy-whisper{
+  font-style:italic;font-size:0.83rem;color:var(--red-accent);
+  border-left:2px solid var(--red-accent);padding:0.5rem 0.8rem;
+  margin:0.6rem 0;display:none;
+  background:rgba(122,48,48,0.06);
+}
 .prog-wrap{width:100%;padding:0 1rem;margin-bottom:0.7rem;}
 .prog-lbl{font-family:var(--mono);font-size:0.55rem;letter-spacing:0.25em;color:var(--slate-light);text-align:right;margin-bottom:0.3rem;}
 .prog-track{height:1.5px;background:rgba(74,98,120,0.2);}
 .prog-fill{height:100%;background:var(--slate);transition:width 0.6s ease;}
-.ticket-outer{margin:1.5rem auto 0;border:1px solid rgba(74,98,120,0.4);background:rgba(238,243,240,0.92);border-radius:2px;overflow:hidden;max-width:340px;width:90%;}
-.ticket-stripe{height:3px;background:linear-gradient(90deg,#7a3030,#4a6278,#8fa8bc);}
+
+/* ── RECOMPENSA CINE ── */
+#s-resolved{background:linear-gradient(135deg,#1a0a2e 0%,#0d1b2a 40%,#1a2a1a 100%);position:relative;overflow:hidden;}
+#s-resolved::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%, rgba(255,215,0,0.06) 0%, transparent 70%);pointer-events:none;}
+#cine-lottie{width:280px;height:280px;margin:0 auto;position:relative;z-index:1;filter:drop-shadow(0 0 30px rgba(255,200,50,0.3));}
+.reward-title{font-size:clamp(1.6rem,6vw,2rem);color:#f0d060;font-weight:700;letter-spacing:0.12em;text-align:center;position:relative;z-index:1;text-shadow:0 0 30px rgba(255,215,0,0.5);margin-bottom:0.3rem;}
+.reward-sub{font-family:var(--mono);font-size:0.62rem;letter-spacing:0.4em;color:rgba(255,215,0,0.55);text-align:center;position:relative;z-index:1;margin-bottom:1.5rem;}
+.ticket-outer{margin:0 auto;border:1px solid rgba(255,215,0,0.3);background:rgba(10,15,20,0.85);border-radius:4px;overflow:hidden;max-width:320px;width:90%;position:relative;z-index:1;box-shadow:0 0 40px rgba(255,200,50,0.12), inset 0 0 20px rgba(255,200,50,0.03);}
+.ticket-stripe{height:3px;background:linear-gradient(90deg,#b8860b,#ffd700,#8fa8bc,#ffd700,#b8860b);}
 .ticket-body{padding:1.3rem 1.5rem;text-align:center;}
-.ticket-sep{border:none;border-top:1px dashed rgba(74,98,120,0.3);margin:0.9rem 0;}
-.ticket-heart{color:var(--red-accent);display:inline-block;animation:hb 1.6s ease-in-out infinite;}
+.ticket-sep{border:none;border-top:1px dashed rgba(255,215,0,0.2);margin:0.9rem 0;}
+.ticket-heart{color:#ff6b8a;display:inline-block;animation:hb 1.6s ease-in-out infinite;}
 @keyframes hb{0%,100%{transform:scale(1)}35%{transform:scale(1.28)}65%{transform:scale(1.08)}}
-.typewriter-final{font-family:var(--mono);font-size:clamp(0.8rem,3vw,0.95rem);line-height:1.95;color:var(--slate);text-align:center;max-width:360px;padding:0 1rem;}
-.buk-sig{font-family:var(--serif);font-style:italic;color:var(--mist);font-size:0.9rem;margin-top:1.8rem;text-align:center;opacity:0;transition:opacity 1.3s;}
-@keyframes eyeM{0%,100%{transform:translateX(0)}30%{transform:translateX(7px)}70%{transform:translateX(-7px)}}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.confetti-piece{position:fixed;top:-10px;width:8px;height:8px;border-radius:50%;animation:confettiFall linear forwards;pointer-events:none;z-index:999;}
+
+/* ── PANTALLA DE FALLO ── */
+#s-failed{background:linear-gradient(180deg,#1a1a2e 0%,#2d1b1b 60%,#3d2020 100%);}
+.failed-inner{padding:3rem 1.5rem;text-align:center;max-width:400px;width:100%;}
+
+/* ── FINAL ── */
+.typewriter-final{
+  font-family:var(--mono);font-size:clamp(0.8rem,3vw,0.95rem);
+  line-height:1.95;color:var(--text-dark);text-align:center;
+  max-width:360px;padding:0 1rem;
+}
+.buk-sig{
+  font-family:var(--serif);font-style:italic;
+  color:var(--slate);font-size:0.9rem;margin-top:1.8rem;
+  text-align:center;opacity:0;transition:opacity 1.3s;
+  font-weight: bold;
+}
+/* Estilo para las líneas decodificándose */
+.decode-line {
+  display: block;
+  min-height: 1.5rem;
+  margin-bottom: 0.3rem;
+}
 </style>
 </head>
 <body>
 
-<div id="s-intro" class="screen active" style="justify-content:flex-start;padding-top:2.5rem;background:linear-gradient(180deg,#b8cdd8 0%,#c8d8e4 40%,#d8e6ec 70%,#c2b89a 100%);">
-  <div style="width:100%;max-width:480px;padding:0 1.5rem;text-align:center;margin:0 auto;">
-    <p style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.5em;color:var(--slate-light);text-align:center;margin-bottom:0.4rem;">Ben Affleck &nbsp;&#183;&nbsp; Rosamund Pike</p>
-    <div style="font-size:clamp(2.4rem,10vw,3.4rem);letter-spacing:0.22em;color:var(--slate);font-weight:700;text-align:center;opacity:0.85;line-height:1.05;">GONE<br>GIRL</div>
-    <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.25em;color:var(--mist);text-align:center;font-style:italic;margin:0.7rem 0 1.2rem;">"You don't know what you've got 'til it's..."</p>
-    <div style="width:50px;height:1px;background:var(--slate-light);margin:0.9rem auto;opacity:0.5;"></div>
-    <p style="font-family:var(--mono);font-size:0.62rem;letter-spacing:0.2em;color:var(--slate-light);line-height:1.9;">Un recorrido psicologico hacia la verdad<br>Puedes descifrar cada pista?</p>
-    <button class="btn-film" style="margin:1.5rem auto 0;" onclick="goScreen('s-map')">&#9654; Comenzar expediente</button>
-  </div>
-  <div style="width:100%;margin-top:auto;">
-    <svg width="100%" viewBox="0 0 360 200" style="display:block;">
-      <rect width="360" height="200" fill="#8fa8bc" opacity="0.3"/>
-      <rect x="0" y="155" width="360" height="45" fill="#3a4a38" opacity="0.48"/>
-      <ellipse cx="180" cy="60" rx="45" ry="30" fill="#d4dfe8" opacity="0.5"/>
-      <ellipse cx="230" cy="68" rx="32" ry="22" fill="#ccd8e2" opacity="0.4"/>
-      <g transform="translate(172,118)">
-        <rect x="-7" y="-36" width="14" height="36" rx="2" fill="#2a3640" opacity="0.78"/>
-        <circle cx="0" cy="-45" r="10" fill="#2a3640" opacity="0.78"/>
-        <rect x="-16" y="-32" width="11" height="2.5" rx="1" fill="#2a3640" opacity="0.6"/>
-        <rect x="5" y="-32" width="11" height="2.5" rx="1" fill="#2a3640" opacity="0.6"/>
-      </g>
-      <text x="180" y="192" font-family="Courier Prime,monospace" font-size="7.5" fill="#4a6278" opacity="0.55" text-anchor="middle" letter-spacing="3">SEARCH FOR AMAZING AMY CONTINUES</text>
-    </svg>
+<div id="s-intro" class="screen active">
+  <div class="bg-img"></div>
+  <div class="grain"></div>
+  <div class="scanlines"></div>
+  <div id="intro-content">
+    <p class="intro-meta">Ben Affleck &nbsp;·&nbsp; Rosamund Pike</p>
+    <p class="intro-tagline">Un recorrido psicológico hacia la verdad<br>¿Puedes descifrar cada pista?</p>
+    <div class="intro-divider"></div>
+    <p class="intro-quote">"You don't know what you've got 'til it's…"</p>
+    <button class="btn-film-light" onclick="goScreen('s-map')">▶ Comenzar expediente</button>
   </div>
 </div>
 
@@ -89,19 +271,11 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
   <div style="width:100%;max-width:480px;margin:0 auto;">
     <div style="width:100%;padding:1rem 1rem 0;">
       <p style="font-family:var(--mono);font-size:0.58rem;letter-spacing:0.35em;color:var(--slate);text-align:center;margin-bottom:1rem;text-transform:uppercase;">Camino hacia la verdad</p>
-      <div id="path-nodes" style="margin-bottom:1.8rem;"></div>
-      <div class="ale-fig" id="ale-fig">
-        <svg width="48" height="64" viewBox="0 0 44 60" style="display:block;margin:0 auto;">
-          <circle cx="22" cy="10" r="8" fill="#4a6278"/>
-          <rect x="15" y="18" width="14" height="20" rx="3" fill="#5a7890"/>
-          <rect x="17" y="22" width="10" height="2" rx="1" fill="#8fa8bc"/>
-          <rect x="10" y="20" width="8" height="2.5" rx="1" fill="#4a6278"/>
-          <rect x="26" y="20" width="8" height="2.5" rx="1" fill="#4a6278"/>
-          <rect x="15" y="38" width="5" height="15" rx="2" fill="#4a6278"/>
-          <rect x="24" y="38" width="5" height="15" rx="2" fill="#4a6278"/>
-          <circle cx="22" cy="10" r="4" fill="#c2b89a" opacity="0.35"/>
-        </svg>
-        <p class="ale-name">Ale &nbsp;&#183;&nbsp; Dentista</p>
+      <div id="path-nodes" style="margin-bottom:1.4rem;"></div>
+      <div class="detective-wrap">
+        <div id="detective-lottie"></div>
+        <p class="ale-name" id="detective-label">Aishia &nbsp;·&nbsp; Investigadora</p>
+        <div class="score-badge" id="map-score-badge">Deducción: 0 pts</div>
       </div>
     </div>
     <div class="prog-wrap">
@@ -109,7 +283,7 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
       <div class="prog-track"><div class="prog-fill" id="map-prog-fill" style="width:0%"></div></div>
     </div>
     <div style="text-align:center;padding-bottom:2rem;">
-      <button class="btn-film" style="margin:0.8rem auto 0;" id="map-btn" onclick="startQuestion()">&#9654; Avanzar al siguiente punto</button>
+      <button class="btn-film" style="margin:0.8rem auto 0;" id="map-btn" onclick="startQuestion()">▶ Avanzar al siguiente punto</button>
     </div>
   </div>
 </div>
@@ -120,20 +294,15 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
       <p class="prog-lbl" id="q-prog-lbl">Pista 1 / 7</p>
       <div class="prog-track"><div class="prog-fill" id="q-prog-fill" style="width:0%"></div></div>
     </div>
-    <div class="ale-fig" style="margin:0.5rem 0 0.5rem;">
-      <svg width="36" height="48" viewBox="0 0 44 60">
-        <circle cx="22" cy="10" r="8" fill="#4a6278"/>
-        <rect x="15" y="18" width="14" height="20" rx="3" fill="#5a7890"/>
-        <rect x="17" y="22" width="10" height="2" rx="1" fill="#8fa8bc"/>
-        <rect x="10" y="20" width="8" height="2.5" rx="1" fill="#4a6278"/>
-        <rect x="26" y="20" width="8" height="2.5" rx="1" fill="#4a6278"/>
-        <rect x="15" y="38" width="5" height="15" rx="2" fill="#4a6278"/>
-        <rect x="24" y="38" width="5" height="15" rx="2" fill="#4a6278"/>
-      </svg>
-      <p class="ale-name" style="font-size:0.48rem;">Ale detiene el camino...</p>
+    <div style="text-align:center;margin:0.5rem 0 0.5rem;">
+      <div id="detective-lottie-q" style="width:64px;height:64px;margin:0 auto;"></div>
+      <p class="ale-name" style="font-size:0.48rem;margin-top:0.15rem;">Analizando evidencia...</p>
     </div>
     <div class="q-card">
-      <p class="q-eyebrow" id="q-eyebrow">Pista 01</p>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+        <p class="q-eyebrow" id="q-eyebrow" style="margin:0;">Pista 01</p>
+        <span style="font-family:var(--mono);font-size:0.5rem;color:var(--slate);">Valor: <span id="q-points-value">100</span> pts</span>
+      </div>
       <p class="q-text" id="q-text-el"></p>
       <div id="q-opts"></div>
       <p class="fb-msg" id="q-fb"></p>
@@ -143,61 +312,131 @@ body{background:#c8d8e4;font-family:var(--serif);color:var(--text-dark);overflow
 </div>
 
 <div id="s-resolved" class="screen">
-  <div style="background:linear-gradient(180deg,#b8cdd8 0%,#c8d8e4 50%,#c2b89a 100%);min-height:100vh;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2.5rem 1.5rem;">
-    <svg width="52" height="52" viewBox="0 0 48 48" style="margin-bottom:1.2rem;">
-      <circle cx="24" cy="24" r="22" stroke="#4a6278" stroke-width="1" fill="rgba(74,98,120,0.12)"/>
-      <path d="M14 24l7 7 13-13" stroke="#4a6278" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <p style="font-size:1.5rem;color:var(--slate);font-weight:700;letter-spacing:0.1em;text-align:center;margin-bottom:0.5rem;">Misterio completado</p>
-    <div style="width:42px;height:1px;background:var(--mist);margin:0.9rem 0;opacity:0.6;"></div>
-    <p style="font-style:italic;font-size:1rem;color:var(--slate);text-align:center;line-height:1.75;max-width:290px;">"Descifraste cada pista… encontraste la verdad."</p>
+  <div style="width:100%;max-width:480px;margin:0 auto;padding:2rem 1.5rem 3rem;display:flex;flex-direction:column;align-items:center;">
+    <div id="cine-lottie"></div>
+    <p class="reward-title">¡Caso Resuelto! 🎬</p>
+    <p class="reward-sub">Detective Aisha — Expediente Cerrado</p>
     <div class="ticket-outer">
       <div class="ticket-stripe"></div>
       <div class="ticket-body">
-        <p style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.45em;color:var(--text-light);margin-bottom:0.4rem;">Cinepolis Presents</p>
-        <p style="font-size:1.5rem;color:var(--slate);font-weight:700;letter-spacing:0.12em;">Gone Girl</p>
-        <p style="font-family:var(--mono);font-size:0.5rem;letter-spacing:0.15em;color:var(--text-light);margin-top:0.3rem;">Una noche - Una verdad</p>
-        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.55rem;color:var(--text-light);margin-top:0.7rem;"><span>Fila A - Lugar 07</span><span>VIP Platinum</span></div>
+        <p style="font-family:var(--mono);font-size:0.48rem;letter-spacing:0.45em;color:rgba(255,215,0,0.45);margin-bottom:0.4rem;">✦ PREMIO ESPECIAL ✦</p>
+        <p style="font-size:1.4rem;color:#f0d060;font-weight:700;letter-spacing:0.1em;font-family:var(--serif);">Cita en el Cine</p>
+        <p style="font-family:var(--mono);font-size:0.48rem;letter-spacing:0.12em;color:rgba(255,215,0,0.4);margin-top:0.25rem;">Porque sí eres digna de otra salida</p>
         <hr class="ticket-sep"/>
-        <p style="font-style:italic;font-size:1.05rem;color:var(--text-dark);line-height:1.65;">Tu recompensa:<br>una cita conmigo <span class="ticket-heart">&#9829;</span></p>
-        <p style="font-family:var(--mono);font-size:0.45rem;letter-spacing:0.3em;color:rgba(74,98,120,0.28);margin-top:0.7rem;">| || | ||| || | | ||| | || ||| | | || |</p>
+        <p id="reward-message" style="font-style:italic;font-size:0.98rem;color:rgba(255,255,255,0.85);line-height:1.7;font-family:var(--serif);">
+          Descifraste el misterio… ahora mereces<br>palomitas, oscuridad y unos besotes míos <span class="ticket-heart">♥</span>
+        </p>
+        <hr class="ticket-sep"/>
+        <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:0.5rem;color:rgba(255,215,0,0.35);">
+          <span>Fila A · Lugar 01</span>
+          <span>VIP ✦</span>
+        </div>
+        <p style="font-family:var(--mono);font-size:0.38rem;letter-spacing:0.25em;color:rgba(255,215,0,0.18);margin-top:0.7rem;">| || | ||| || | | ||| | || ||| | | || |</p>
       </div>
     </div>
-    <button class="btn-film" style="margin-top:1.8rem;" onclick="goScreen('s-final')">&#9654; Continuar</button>
+    <p style="font-family:var(--mono);font-size:0.55rem;letter-spacing:0.2em;color:rgba(255,215,0,0.3);margin-top:1.5rem;text-align:center;font-style:italic;">
+      "La detective más preciosa merece su recompensa."
+    </p>
+    <button class="btn-film" style="margin-top:1.8rem;border-color:rgba(255,215,0,0.3);color:rgba(255,215,0,0.7);" onclick="goScreen('s-final')">▶ Continuar</button>
   </div>
 </div>
 
-<div id="s-final" class="screen" style="justify-content:center;min-height:100vh;background:linear-gradient(180deg,#b8cdd8,#c2b89a);">
+<div id="s-failed" class="screen">
+  <div class="failed-inner" style="display:flex;flex-direction:column;align-items:center;min-height:100vh;justify-content:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">🔍</div>
+    <p style="font-size:1.3rem;color:#c07070;font-weight:700;letter-spacing:0.1em;text-align:center;margin-bottom:0.8rem;">Expediente incompleto</p>
+    <div style="width:42px;height:1px;background:rgba(192,112,112,0.4);margin:0.8rem 0;"></div>
+    <p style="font-style:italic;font-size:0.95rem;color:rgba(255,255,255,0.5);text-align:center;line-height:1.75;max-width:280px;font-family:var(--mono);">"La verdad requiere más atención… Amazing Amy sigue libre."</p>
+    <p id="failed-score" style="font-family:var(--mono);font-size:0.6rem;letter-spacing:0.2em;color:rgba(192,112,112,0.6);margin-top:1.5rem;"></p>
+    <button class="btn-film" style="margin-top:2rem;border-color:rgba(192,112,112,0.4);color:rgba(192,112,112,0.7);" onclick="resetGame()">↺ Reintentar expediente</button>
+  </div>
+</div>
+
+<div id="s-final" class="screen" style="justify-content:center;min-height:100vh;background:linear-gradient(180deg,#cad8e0 0%,#b4c8d4 50%,#a8bec8 100%);">
   <div style="width:100%;max-width:440px;padding:2.5rem 1.5rem;text-align:center;">
-    <div style="width:52px;height:26px;border:1px solid rgba(74,98,120,0.4);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 2rem;">
-      <div style="width:8px;height:8px;background:var(--slate);border-radius:50%;animation:eyeM 4s ease-in-out infinite;"></div>
-    </div>
+    
+    <div id="love-lottie" style="width:110px;height:110px;margin:0 auto 1.5rem;"></div>
+    
     <div class="typewriter-final" id="tw-container"></div>
     <p class="buk-sig" id="buk-sig">- Charles Bukowski</p>
   </div>
 </div>
 
 <script>
+// ══ Datos ══
 var questions=[
-  {n:"01",label:"El tesoro",text:"Que objeto especifico dentro del treasure hunt revela indirectamente la situacion financiera real de Nick?",opts:["Un libro antiguo","Una caja de juguetes","Un set de electrodomesticos caros","Un sobre con dinero"],correct:2,amy:["De verdad no recuerdas los detalles?","Los detalles importan, Nick los ignoraba."]},
-  {n:"02",label:"La huida",text:"Que error comete Amy durante su huida que cambia el rumbo de su plan original?",opts:["Confia en la policia","Es reconocida en un hotel","Es asaltada y pierde su dinero","Se comunica con Nick"],correct:2,amy:["Amy no comete errores facilmente.","Seguro que recuerdas la verdad?"]},
-  {n:"03",label:"El cuerpo",text:"Que detalle medico permite a Amy manipular la narrativa al regresar a casa?",opts:["Un analisis de sangre alterado","Lesiones autoinfligidas cuidadosamente planeadas","Un embarazo previo oculto","Un historial psiquiatrico falso"],correct:1,amy:["El cuerpo puede ser una herramienta.","Amy siempre tuvo un plan B."]},
-  {n:"04",label:"El diario",text:"Que evidencia utiliza Amy para reforzar la acusacion de abuso contra Nick?",opts:["Fotografias manipuladas","Un diario falsificado con el paso del tiempo","Grabaciones de audio","Testigos pagados"],correct:1,amy:["Las palabras escritas tienen poder.","Cuantas veces necesitas equivocarte?"]},
-  {n:"05",label:"El regreso",text:"Cual es el verdadero proposito de Amy al regresar con Nick en lugar de desaparecer definitivamente?",opts:["Falta de dinero","Miedo a ser descubierta","Mantener el control sobre la narrativa y su relacion","Amor genuino"],correct:2,amy:["El control es la forma mas profunda de poder.","Para Amy, rendirse nunca fue opcion."]},
-  {n:"06",label:"La imagen",text:"Que elemento convierte la entrevista televisiva de Nick en un punto de inflexion?",opts:["Su confesion parcial","La asesoria mediatica que cambia su imagen","Una prueba presentada en vivo","La aparicion de Amy"],correct:1,amy:["La imagen publica lo es todo.","Nick aprendio tarde el poder de la narrativa."]},
-  {n:"07",label:"Amazing Amy",text:"Que simboliza realmente el personaje de Amazing Amy dentro de la historia?",opts:["La infancia perfecta","La presion de una identidad idealizada imposible de alcanzar","Un simple recurso literario","El exito familiar"],correct:1,amy:["Ser perfecta tiene un precio.","Amazing Amy fue siempre la trampa mas grande."]}
+  {n:"01",label:"El tesoro",text:"¿Qué objeto específico dentro del treasure hunt revela indirectamente la situación financiera real de Nick?",opts:["Un libro antiguo","Una caja de juguetes","Un set de electrodomésticos caros","Un sobre con dinero"],correct:2,amy:["¿De verdad no recuerdas los detalles?","Los detalles importan, Nick los ignoraba."]},
+  {n:"02",label:"La huida",text:"¿Qué error comete Amy durante su huida que cambia el rumbo de su plan original?",opts:["Confía en la policía","Es reconocida en un hotel","Es asaltada y pierde su dinero","Se comunica con Nick"],correct:2,amy:["Amy no comete errores fácilmente.","¿Seguro que recuerdas la verdad?"]},
+  {n:"03",label:"El cuerpo",text:"¿Qué detalle médico permite a Amy manipular la narrativa al regresar a casa?",opts:["Un análisis de sangre alterado","Lesiones autoinfligidas cuidadosamente planeadas","Un embarazo previo oculto","Un historial psiquiátrico falso"],correct:1,amy:["El cuerpo puede ser una herramienta.","Amy siempre tuvo un plan B."]},
+  {n:"04",label:"El diario",text:"¿Qué evidencia utiliza Amy para reforzar la acusación de abuso contra Nick?",opts:["Fotografías manipuladas","Un diario falsificado con el paso del tiempo","Grabaciones de audio","Testigos pagados"],correct:1,amy:["Las palabras escritas tienen poder.","¿Cuántas veces necesitas equivocarte?"]},
+  {n:"05",label:"El regreso",text:"¿Cuál es el verdadero propósito de Amy al regresar con Nick en lugar de desaparecer definitivamente?",opts:["Falta de dinero","Miedo a ser descubierta","Mantener el control sobre la narrativa y su relación","Amor genuino"],correct:2,amy:["El control es la forma más profunda de poder.","Para Amy, rendirse nunca fue opción."]},
+  {n:"06",label:"La imagen",text:"¿Qué elemento convierte la entrevista televisiva de Nick en un punto de inflexión?",opts:["Su confesión parcial","La asesoría mediática que cambia su imagen","Una prueba presentada en vivo","La aparición de Amy"],correct:1,amy:["La imagen pública lo es todo.","Nick aprendió tarde el poder de la narrativa."]},
+  {n:"07",label:"Amazing Amy",text:"¿Qué simboliza realmente el personaje de Amazing Amy dentro de la historia?",opts:["La infancia perfecta","La presión de una identidad idealizada imposible de alcanzar","Un simple recurso literario","El éxito familiar"],correct:1,amy:["Ser perfecta tiene un precio.","Amazing Amy fue siempre la trampa más grande."]}
 ];
-var current=0,wrongs=0,locked=false;
+
+// ══ Estado ══
+var current=0, wrongs=0, locked=false, correctCount=0;
+var totalScore = 0;
+var currentQPoints = 100;
+var MIN_CORRECT = 4;
+
+// ══ Instancias Lottie ══
+var detLottieMap=null, detLottieQ=null, cineLottie=null, loveLottie=null;
+
+function initDetectiveLottie(){
+  if(detLottieMap){ detLottieMap.destroy(); }
+  detLottieMap = lottie.loadAnimation({
+    container: document.getElementById('detective-lottie'),
+    renderer: 'svg', loop: true, autoplay: true, path: './assets/detective.json'
+  });
+  if(detLottieQ){ detLottieQ.destroy(); }
+  detLottieQ = lottie.loadAnimation({
+    container: document.getElementById('detective-lottie-q'),
+    renderer: 'svg', loop: true, autoplay: true, path: './assets/detective.json'
+  });
+}
+
+function initCineLottie(){
+  if(cineLottie){ cineLottie.destroy(); }
+  cineLottie = lottie.loadAnimation({
+    container: document.getElementById('cine-lottie'),
+    renderer: 'svg', loop: true, autoplay: true, path: './assets/cine.json'
+  });
+}
+
+function initLoveLottie(){
+  if(loveLottie){ loveLottie.destroy(); }
+  loveLottie = lottie.loadAnimation({
+    container: document.getElementById('love-lottie'),
+    renderer: 'svg', loop: true, autoplay: true, path: './assets/love.json'
+  });
+}
+
+function updateDetectivePosition(){
+  var el = document.getElementById('detective-lottie');
+  if(!el) return;
+  var maxShift = 140; 
+  var pct = current / questions.length;
+  var shift = Math.round(pct * maxShift);
+  el.style.transform = 'translateX('+shift+'px)';
+}
+
+// ══ Navegación ══
 function goScreen(id){
   var screens=document.querySelectorAll('.screen');
   screens.forEach(function(s){s.classList.remove('active');s.style.display='none';});
   var el=document.getElementById(id);
   el.style.display='flex';
   setTimeout(function(){el.classList.add('active');},10);
-  if(id==='s-map') renderMap();
-  if(id==='s-final') startTypewriter();
+  
+  if(id==='s-map'){ renderMap(); initDetectiveLottie(); updateDetectivePosition(); }
+  if(id==='s-final'){ initLoveLottie(); startDecoderEffect(); }
+  if(id==='s-resolved'){ initCineLottie(); launchConfetti(); }
+  if(id==='s-question'){ initDetectiveLottie(); }
   window.scrollTo(0,0);
 }
+
+// ══ Mapa ══
 function renderMap(){
   var wrap=document.getElementById('path-nodes');
   wrap.innerHTML='';
@@ -217,29 +456,52 @@ function renderMap(){
     else if(i===current) cls+=' current';
     else cls+=' locked';
     node.className=cls;
-    node.innerHTML='<span class="node-num">'+(i<current?'&#10003;':(i+1))+'</span><span class="node-label">'+questions[i].label+'</span>';
+    node.innerHTML='<span class="node-num">'+(i<current?'✓':(i+1))+'</span><span class="node-label">'+questions[i].label+'</span>';
     row.appendChild(node);
   }
   wrap.appendChild(row1);wrap.appendChild(row2);
   var pct=Math.round((current/questions.length)*100);
   document.getElementById('map-prog-fill').style.width=pct+'%';
   document.getElementById('map-prog-lbl').textContent='Misterio resuelto: '+pct+'%';
+  document.getElementById('map-score-badge').textContent = 'Deducción: ' + totalScore + ' pts';
+  
   var btn=document.getElementById('map-btn');
-  if(current>=questions.length){btn.innerHTML='&#9829; Ver mi recompensa';btn.onclick=function(){goScreen('s-resolved');};}
-  else{btn.innerHTML='&#9654; Avanzar al siguiente punto';btn.onclick=startQuestion;}
+  if(current>=questions.length){
+    btn.innerHTML='♥ Ver mi recompensa';
+    btn.onclick=function(){
+      if(correctCount>=MIN_CORRECT){
+        goScreen('s-resolved');
+      } else {
+        document.getElementById('failed-score').textContent=
+          'Respuestas correctas: '+correctCount+' / '+questions.length+' (se necesitan '+MIN_CORRECT+')';
+        goScreen('s-failed');
+      }
+    };
+  } else {
+    btn.innerHTML='▶ Avanzar al siguiente punto';
+    btn.onclick=startQuestion;
+  }
 }
+
+// ══ Pregunta ══
 function startQuestion(){goScreen('s-question');renderQuestion();}
 function renderQuestion(){
   var q=questions[current];
   locked=false;
-  document.getElementById('q-eyebrow').textContent='Pista '+q.n+' - '+q.label;
+  wrongs=0;
+  currentQPoints=100;
+  
+  document.getElementById('q-eyebrow').textContent='Pista '+q.n+' — '+q.label;
+  document.getElementById('q-points-value').textContent=currentQPoints;
   document.getElementById('q-text-el').textContent=q.text;
   document.getElementById('q-fb').textContent='';
   document.getElementById('q-fb').className='fb-msg';
   document.getElementById('amy-w').style.display='none';
+  
   var pct=Math.round((current/questions.length)*100);
   document.getElementById('q-prog-fill').style.width=pct+'%';
   document.getElementById('q-prog-lbl').textContent='Pista '+(current+1)+' / 7';
+  
   var opts=document.getElementById('q-opts');
   opts.innerHTML='';
   var letters=['A','B','C','D'];
@@ -253,44 +515,132 @@ function renderQuestion(){
     })(i);
   }
 }
+
 function pick(idx,btn){
   if(locked) return;
   locked=true;
   var q=questions[current];
   var allBtns=document.querySelectorAll('.opt-btn');
   allBtns.forEach(function(b){b.disabled=true;});
+  
   if(idx===q.correct){
     btn.classList.add('correct');
-    document.getElementById('q-fb').textContent='Correcto. Ale avanza un paso mas.';
+    correctCount++;
+    totalScore += currentQPoints;
+    document.getElementById('q-fb').textContent='¡Correcto! (+' + currentQPoints + ' pts)';
     document.getElementById('q-fb').className='fb-msg fb-ok';
-    wrongs=0;
     setTimeout(function(){current++;goScreen('s-map');},1700);
   } else {
     btn.classList.add('wrong');
     wrongs++;
-    document.getElementById('q-fb').textContent='Incorrecto. La memoria traiciona.';
+    currentQPoints = Math.max(0, currentQPoints - 35); // Restar puntos por error
+    document.getElementById('q-points-value').textContent=currentQPoints;
+    
+    document.getElementById('q-fb').textContent='Incorrecto. Analiza mejor.';
     document.getElementById('q-fb').className='fb-msg fb-err';
     if(navigator.vibrate) navigator.vibrate([70,40,70]);
-    if(wrongs>=2){var aw=document.getElementById('amy-w');aw.textContent='"'+q.amy[Math.min(wrongs-2,q.amy.length-1)]+'"';aw.style.display='block';}
-    setTimeout(function(){locked=false;allBtns.forEach(function(b){b.disabled=false;b.classList.remove('wrong','correct');});document.getElementById('q-fb').textContent='';},2000);
+    if(wrongs>=2){
+      var aw=document.getElementById('amy-w');
+      aw.textContent='"'+q.amy[Math.min(wrongs-2,q.amy.length-1)]+'"';
+      aw.style.display='block';
+    }
+    setTimeout(function(){
+      locked=false;
+      allBtns.forEach(function(b){b.disabled=false;b.classList.remove('wrong','correct');});
+      document.getElementById('q-fb').textContent='';
+      if(wrongs>=3){current++;goScreen('s-map');}
+    },2200);
   }
 }
-function startTypewriter(){
-  var lines=['"Dormimos abrazados como por una hora,','y eso en cierto modo fue mejor','que haber hecho el amor."','','"Mira, vamos a plantearlo de esta manera...','para mi, tu eres la numero uno,','y ni siquiera hay numero dos."'];
-  typeL(lines,0,0);
+
+// ══ Reset ══
+function resetGame(){
+  current=0; wrongs=0; locked=false; correctCount=0; totalScore=0;
+  goScreen('s-map');
 }
-function typeL(lines,li,ci){
-  if(li>=lines.length){setTimeout(function(){document.getElementById('buk-sig').style.opacity='1';},900);return;}
-  var c=document.getElementById('tw-container');
-  if(ci===0){
-    if(lines[li]===''){c.appendChild(document.createElement('br'));setTimeout(function(){typeL(lines,li+1,0);},380);return;}
-    var sp=document.createElement('span');sp.id='tl'+li;sp.style.display='block';c.appendChild(sp);
+
+// ══ Confetti ══
+function launchConfetti(){
+  var colors=['#ffd700','#ff6b8a','#8fa8bc','#f0d060','#ffb347','#b8d4e8'];
+  for(var i=0;i<60;i++){
+    (function(delay){
+      setTimeout(function(){
+        var el=document.createElement('div');
+        el.className='confetti-piece';
+        el.style.left=Math.random()*100+'vw';
+        el.style.background=colors[Math.floor(Math.random()*colors.length)];
+        el.style.width=(6+Math.random()*8)+'px';
+        el.style.height=(6+Math.random()*8)+'px';
+        el.style.borderRadius=Math.random()>0.5?'50%':'2px';
+        el.style.animationDuration=(2.5+Math.random()*2.5)+'s';
+        document.body.appendChild(el);
+        setTimeout(function(){el.remove();},5500);
+      },delay);
+    })(i*80);
   }
-  var el=document.getElementById('tl'+li);
-  if(ci<lines[li].length){el.textContent+=lines[li][ci];setTimeout(function(){typeL(lines,li,ci+1);},37);}
-  else{c.appendChild(document.createElement('br'));setTimeout(function(){typeL(lines,li+1,0);},500);}
 }
+
+// ══ Desencriptador Final (Efecto Dinámico Detective) ══
+function startDecoderEffect(){
+  var lines=[
+    '"Dormimos abrazados como por una hora,',
+    'y eso en cierto modo fue mejor',
+    'que haber hecho el amor."',
+    '',
+    '"Mira, vamos a plantearlo de esta manera…',
+    'para mí, tú eres la número uno,',
+    'y ni siquiera hay número dos."'
+  ];
+  
+  var c = document.getElementById('tw-container');
+  c.innerHTML = ''; // Limpiar contenedor
+  
+  let currentLine = 0;
+  
+  function decodeNextLine() {
+    if (currentLine >= lines.length) {
+      setTimeout(function(){ document.getElementById('buk-sig').style.opacity='1'; }, 500);
+      return;
+    }
+    
+    if(lines[currentLine] === "") {
+       c.appendChild(document.createElement('br'));
+       currentLine++;
+       setTimeout(decodeNextLine, 200);
+       return;
+    }
+
+    var el = document.createElement('span');
+    el.className = 'decode-line';
+    c.appendChild(el);
+    
+    let text = lines[currentLine];
+    let characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&*";
+    let iterations = 0;
+    
+    let interval = setInterval(() => {
+      el.innerText = text.split("").map((letter, index) => {
+        if(letter === " " || index < iterations) {
+          return text[index];
+        }
+        return characters[Math.floor(Math.random() * characters.length)];
+      }).join("");
+      
+      if(iterations >= text.length) {
+        clearInterval(interval);
+        currentLine++;
+        setTimeout(decodeNextLine, 300);
+      }
+      iterations += 1/2; // Velocidad de desencriptación
+    }, 25);
+  }
+  
+  decodeNextLine();
+}
+
+// ══ Init ══
 renderMap();
+initDetectiveLottie();
 </script>
 </body>
 </html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Para Aishia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;1,400;1,500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    color-scheme: light dark;
+
+    --bg: #E9E5F9;
+    --ink: #2A2158;
+    --soft: #5B5289;
+    --halo: #FFF0A8;
+    --paper: #FFF8E6;
+    --paper-d: #F0DDB0;
+    --ribbon: #E4507A;
+    --ribbon-d: #C23A63;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #171233;
+      --ink: #FFF1C9;
+      --soft: #C9C0F0;
+      --halo: #3A2E6C;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #171233;
+    --ink: #FFF1C9;
+    --soft: #C9C0F0;
+    --halo: #3A2E6C;
+  }
+  html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Fraunces", Georgia, "Times New Roman", serif;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    overflow-x: hidden;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 1020px;
+    display: grid;
+    gap: clamp(8px, 3vw, 40px);
+    align-items: center;
+    justify-items: center;
+  }
+  .bouquet { width: min(100%, 470px); height: auto; display: block; overflow: visible; }
+  .msg { text-align: center; }
+  .msg h1 {
+    margin: 0;
+    font-family: "Pinyon Script", "Snell Roundhand", "Brush Script MT", cursive;
+    font-weight: 400;
+    font-size: clamp(3.4rem, 13vw, 6.4rem);
+    line-height: 1.02;
+    letter-spacing: 0.005em;
+  }
+  .msg .wish {
+    margin: 0.7em 0 0;
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(1.5rem, 4.6vw, 2.1rem);
+  }
+  .msg .date {
+    margin: 1.1em 0 0;
+    color: var(--soft);
+    font-size: 1.05rem;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6em;
+  }
+  .msg .date::before {
+    content: "";
+    width: 0.7em; height: 0.7em; border-radius: 50%;
+    background: #FFC414;
+    box-shadow: 0 0 0 3px color-mix(in srgb, #FFC414 35%, transparent);
+  }
+  @media (min-width: 820px) {
+    .wrap { grid-template-columns: 1.05fr 1fr; justify-items: stretch; }
+    .bouquet { justify-self: center; }
+    .msg { text-align: left; }
+  }
+
+  /* SVG palette */
+  .halo { fill: var(--halo); }
+  .stem { stroke: #3A7D4F; stroke-width: 4.5; stroke-linecap: round; fill: none; }
+  .l1 { fill: #3F8A55; } .l2 { fill: #2F7048; }
+  .rib { stroke: rgba(255,255,255,.35); stroke-width: 1.2; fill: none; }
+  .pa { fill: #FFC414; stroke: #E09A00; stroke-width: .8; }
+  .pb { fill: #FFA800; }
+  .sd { fill: #5A3210; } .sm { fill: #7A4A1C; } .sl { fill: #B07A40; }
+  .ro0 { fill: #F5B800; }
+  .ro1 { fill: #FFD23F; stroke: #D99A00; stroke-width: 1; }
+  .ro2 { fill: #FFDD5C; stroke: #D99A00; stroke-width: 1; }
+  .ro3 { fill: #FFE886; stroke: #D99A00; stroke-width: 1; }
+  .ro4 { fill: #F0A800; }
+  .dz { fill: #FFF4B5; stroke: #F2CF4A; stroke-width: .8; }
+  .dzc { fill: #F59E0B; }
+  .mi { fill: #FFD84A; } .mi2 { fill: #FFEA8F; }
+  .pap-b { fill: var(--paper-d); }
+  .pap-f { fill: var(--paper); }
+  .crease { stroke: var(--paper-d); stroke-width: 1.3; opacity: .7; fill: none; }
+  .rb { fill: var(--ribbon); }
+  .rbd { fill: var(--ribbon-d); }
+
+  /* Un solo momento: el ramo florece y luego aparece el mensaje */
+  @keyframes bloom {
+    from { transform: scale(0) rotate(-50deg); opacity: 0; }
+    65%  { opacity: 1; }
+    to   { transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: none; }
+  }
+  .bloom { transform-origin: 0 0; animation: bloom .95s cubic-bezier(.22, 1.3, .36, 1) var(--d) both; }
+  .base  { animation: fade .7s ease both; }
+  .msg   { animation: rise 1.1s ease 2.3s both; }
+  @media (prefers-reduced-motion: reduce) {
+    .bloom, .base, .msg { animation: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="wrap">
+    <svg class="bouquet" id="bq" viewBox="0 0 400 520" role="img" aria-label="Un ramo de girasoles y rosas amarillas envuelto en papel crema con un moño rosa"></svg>
+
+    <section class="msg">
+      <h1>Te amo muchote,<br>Aishia</h1>
+      <p class="wish">Ten un lindo día preciosa</p>
+      
+      <p>Unas flores que conserves siempre, por creer en esto.</p>
+      <p class="date">Lunes, 21 de septiembre</p>
+    </section>
+  </main>
+
+<script>
+(function () {
+  var rad = function (d) { return d * Math.PI / 180; };
+  var seed = 7;
+  var rnd = function () { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; };
+  var delay = 0.2;
+  var nextDelay = function () { var d = delay; delay += 0.12; return d.toFixed(2); };
+  var f = function (n) { return n.toFixed(2); };
+
+  function sunflower(cx, cy, r, rot) {
+    var g = '', n = 16, i, k;
+    for (i = 0; i < n; i++)
+      g += '<ellipse class="pb" cx="0" cy="' + f(-r * .72) + '" rx="' + f(r * .17) + '" ry="' + f(r * .36) + '" transform="rotate(' + f(i * 360 / n + 360 / n / 2) + ')"/>';
+    for (i = 0; i < n; i++)
+      g += '<ellipse class="pa" cx="0" cy="' + f(-r * .74) + '" rx="' + f(r * .17) + '" ry="' + f(r * .36) + '" transform="rotate(' + f(i * 360 / n) + ')"/>';
+    g += '<circle class="sd" r="' + f(r * .44) + '"/><circle class="sm" r="' + f(r * .34) + '"/>';
+    for (k = 1; k <= 70; k++) {
+      var a = rad(k * 137.508), rr = r * .42 * Math.sqrt(k / 70);
+      g += '<circle class="' + (k % 3 ? 'sl' : 'sm') + '" cx="' + f(rr * Math.cos(a)) + '" cy="' + f(rr * Math.sin(a)) + '" r="' + f(r * .024) + '"/>';
+    }
+    return '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + rot + ')"><g class="bloom" style="--d:' + nextDelay() + 's">' + g + '</g></g>';
+  }
+
+  function rose(cx, cy, r, rot) {
+    var g = '<circle class="ro0" r="' + r + '"/>';
+    var rings = [[7, .62, .38, .30, 'ro1'], [6, .40, .32, .26, 'ro2'], [5, .20, .26, .22, 'ro3']];
+    rings.forEach(function (o, j) {
+      for (var i = 0; i < o[0]; i++)
+        g += '<ellipse class="' + o[4] + '" cx="0" cy="' + f(-r * o[1]) + '" rx="' + f(r * o[2]) + '" ry="' + f(r * o[3]) + '" transform="rotate(' + f(i * 360 / o[0] + j * 22) + ')"/>';
+    });
+    g += '<circle class="ro4" r="' + f(r * .12) + '"/>';
+    return '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + rot + ')"><g class="bloom" style="--d:' + nextDelay() + 's">' + g + '</g></g>';
+  }
+
+  function daisy(cx, cy, r, rot) {
+    var g = '', n = 12, i;
+    for (i = 0; i < n; i++)
+      g += '<ellipse class="dz" cx="0" cy="' + f(-r * .64) + '" rx="' + f(r * .15) + '" ry="' + f(r * .36) + '" transform="rotate(' + f(i * 360 / n) + ')"/>';
+    g += '<circle class="dzc" r="' + f(r * .3) + '"/>';
+    return '<g transform="translate(' + cx + ' ' + cy + ') rotate(' + rot + ')"><g class="bloom" style="--d:' + nextDelay() + 's">' + g + '</g></g>';
+  }
+
+  function mimosa(cx, cy) {
+    var g = '', i;
+    for (i = 0; i < 9; i++) {
+      var a = rnd() * Math.PI * 2, d = rnd() * 15;
+      g += '<circle class="' + (i % 2 ? 'mi' : 'mi2') + '" cx="' + f(Math.cos(a) * d) + '" cy="' + f(Math.sin(a) * d) + '" r="' + f(3.6 + rnd() * 2.2) + '"/>';
+    }
+    return '<g transform="translate(' + cx + ' ' + cy + ')"><g class="bloom" style="--d:' + nextDelay() + 's">' + g + '</g></g>';
+  }
+
+  function leaf(x, y, ang, len, w, cls) {
+    return '<g transform="translate(' + x + ' ' + y + ') rotate(' + ang + ')">' +
+      '<path class="' + cls + '" d="M0 0 C ' + f(len * .25) + ' ' + f(-w) + ', ' + f(len * .7) + ' ' + f(-w * .8) + ', ' + len + ' 0 C ' + f(len * .7) + ' ' + f(w * .8) + ', ' + f(len * .25) + ' ' + f(w) + ', 0 0 Z"/>' +
+      '<path class="rib" d="M0 0 L ' + f(len * .9) + ' 0"/></g>';
+  }
+
+  function stem(x, y) {
+    return '<path class="stem" d="M' + x + ' ' + y + ' C ' + x + ' 300, 200 335, 200 412"/>';
+  }
+
+  // Posiciones de las flores (de atrás hacia adelante)
+  var daisies = [[70, 152, 26, 10], [330, 142, 26, -12], [135, 88, 24, 20], [268, 84, 24, -6]];
+  var fillers = [[42, 208], [358, 206], [96, 112], [304, 120], [200, 36], [168, 56]];
+  var sunflowers = [[112, 192, 50, 12], [290, 187, 52, -8], [200, 137, 58, 0]];
+  var roses = [[66, 264, 32, 0], [336, 260, 33, 14], [155, 252, 38, 8], [250, 257, 40, -10]];
+  var front = [[200, 242, 30, 0]];
+
+  var out = '';
+  // Halo detrás del ramo
+  out += '<circle class="halo" cx="200" cy="235" r="192"/>';
+
+  // Hojas de fondo
+  var leaves = [[-165, 175, 24, 'l1'], [-145, 190, 26, 'l2'], [-15, 175, 24, 'l1'], [-35, 190, 26, 'l2'], [-118, 150, 20, 'l1'], [-62, 150, 20, 'l2']];
+  out += '<g class="base">';
+  leaves.forEach(function (l) { out += leaf(200, 345, l[0], l[1], l[2], l[3]); });
+  // Papel trasero
+  out += '<path class="pap-b" d="M88 312 Q200 286 312 312 L 216 490 Q200 498 184 490 Z"/>';
+  // Tallos
+  daisies.concat(sunflowers, roses, front).forEach(function (p) { out += stem(p[0], p[1]); });
+  fillers.forEach(function (p) { out += stem(p[0], p[1]); });
+  out += '</g>';
+
+  // Flores
+  daisies.forEach(function (p) { out += daisy(p[0], p[1], p[2], p[3]); });
+  fillers.forEach(function (p) { out += mimosa(p[0], p[1]); });
+  sunflowers.forEach(function (p) { out += sunflower(p[0], p[1], p[2], p[3]); });
+  roses.forEach(function (p) { out += rose(p[0], p[1], p[2], p[3]); });
+  front.forEach(function (p) { out += daisy(p[0], p[1], p[2], p[3]); });
+
+  // Papel frontal, pliegues y corazón
+  out += '<g class="base" style="animation-delay:.9s">';
+  out += '<path class="pap-f" d="M96 338 Q200 372 304 338 L 216 490 Q200 498 184 490 Z"/>';
+  out += '<path class="crease" d="M150 358 L 192 488"/><path class="crease" d="M250 358 L 208 488"/>';
+  out += '<path class="rb" transform="translate(200 462) scale(.72)" d="M0 -3 C -8 -12, -18 -1, 0 12 C 18 -1, 8 -12, 0 -3 Z"/>';
+  // Moño
+  out += '<path class="rbd" d="M196 420 Q 184 450 168 460 L 180 466 Q 198 454 204 426 Z"/>';
+  out += '<path class="rbd" d="M204 420 Q 216 450 232 460 L 220 466 Q 202 454 196 426 Z"/>';
+  out += '<path class="rb" d="M200 414 C 168 386 148 402 155 421 C 160 435 188 426 200 414 Z"/>';
+  out += '<path class="rb" d="M200 414 C 232 386 252 402 245 421 C 240 435 212 426 200 414 Z"/>';
+  out += '<circle class="rbd" cx="200" cy="414" r="8"/>';
+  out += '</g>';
+
+  document.getElementById('bq').innerHTML = out;
+})();
+</script>
+</body>
+</html>
